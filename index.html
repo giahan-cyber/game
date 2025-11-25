@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vocabulary Card Battle – Hero Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.2);
+      --accent-strong: #a855f7;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --danger: #fb7185;
+      --success: #4ade80;
+      --card: rgba(15, 23, 42, 0.96);
+      --border-subtle: rgba(148, 163, 184, 0.25);
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.85);
+      --radius-xl: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #0f172a 0, rgba(6, 78, 59, 0.7) 25%, #020617 55%, #000 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .game {
+      width: 100%;
+      max-width: 1120px;
+      background: radial-gradient(circle at top left, rgba(22, 101, 52, 0.35), rgba(15,23,42,0.96));
+      border-radius: 24px;
+      padding: 18px 20px 22px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(34, 197, 94, 0.45);
+      backdrop-filter: blur(18px);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-block h1 span {
+      font-size: 1.6rem;
+    }
+
+    .title-pill {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-soft);
+      background:
+        radial-gradient(circle at top left, rgba(22,163,74,0.6), transparent);
+    }
+
+    .subtitle {
+      margin: 3px 0 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .pill span {
+      opacity: 0.8;
+    }
+
+    #restart-btn {
+      border: none;
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top left, var(--accent), #4ade80);
+      color: #022c22;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px rgba(22, 163, 74, 0.65),
+                  0 12px 30px rgba(22, 163, 74, 0.65);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      display: none;
+    }
+
+    #restart-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 35px rgba(22, 163, 74, 0.85);
+    }
+
+    main.board {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 840px) {
+      main.board {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(22, 163, 74, 0.28), rgba(15,23,42,0.96));
+      border-radius: var(--radius-xl);
+      padding: 12px 12px 14px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+      background: rgba(15,23,42,0.85);
+    }
+
+    .status-top {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .card-shell {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 9px 10px 11px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.85);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-shell::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      opacity: 0.08;
+      background: conic-gradient(
+        from 180deg at 50% 50%,
+        rgba(22, 163, 74, 1),
+        rgba(34, 197, 94, 1),
+        rgba(190, 242, 100, 1),
+        rgba(22, 163, 74, 1)
+      );
+      filter: blur(24px);
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .char-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .enemy-name,
+    .player-name {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .enemy-name span:first-child,
+    .player-name span:first-child {
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .label {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .char-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+    }
+
+    .char-avatar.hero {
+      background: radial-gradient(circle at top, rgba(34, 197, 94, 0.6), rgba(15,23,42,1));
+      border: 1px solid rgba(34, 197, 94, 0.8);
+    }
+
+    .char-avatar.enemy {
+      background: radial-gradient(circle at top, rgba(239, 68, 68, 0.6), rgba(15,23,42,1));
+      border: 1px solid rgba(248, 113, 113, 0.9);
+    }
+
+    .hp-bar {
+      margin-top: 6px;
+      width: 100%;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      overflow: hidden;
+    }
+
+    .hp-bar-inner {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #a3e635, #facc15);
+      width: 100%;
+      transition: width 0.25s ease-out;
+    }
+
+    .hp-bar-inner.enemy {
+      background: linear-gradient(90deg, #fb7185, #fb923c, #facc15);
+    }
+
+    .stats-row {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .stats-row strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .tiny-tagline {
+      margin-top: 5px;
+      font-size: 0.74rem;
+      color: var(--muted);
+      opacity: 0.9;
+    }
+
+    .question-box {
+      margin-top: 8px;
+      padding: 8px 9px;
+      border-radius: 14px;
+      background: rgba(15,23,42,0.95);
+      border: 1px dashed rgba(148, 163, 184, 0.55);
+      font-size: 0.85rem;
+    }
+
+    .question-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    #question-meaning {
+      margin: 0 0 5px;
+      font-size: 0.9rem;
+    }
+
+    #question-example {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-style: italic;
+    }
+
+    .tiny-hint {
+      margin-top: 4px;
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .hand {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      position: relative;
+      padding: 10px 9px 11px;
+      border-radius: 16px;
+      background: radial-gradient(circle at top left, rgba(21, 128, 61, 0.65), rgba(15,23,42,1));
+      border: 1px solid rgba(74, 222, 128, 0.75);
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+      transform-origin: center bottom;
+      transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease,
+        filter 0.16s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 22px 50px rgba(34, 197, 94, 0.7);
+      border-color: rgba(190, 242, 100, 0.9);
+      background: radial-gradient(circle at top left, rgba(101,163,13,0.8), rgba(15,23,42,1));
+      filter: saturate(1.2);
+    }
+
+    .card.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      transform: translateY(0) scale(1);
+      box-shadow: none;
+      filter: grayscale(0.4);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .card-word {
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-size: 0.95rem;
+    }
+
+    .card-rarity {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 999px;
+      letter-spacing: 0.12em;
+      border: 1px solid rgba(190, 242, 100, 0.9);
+      color: rgba(236, 253, 245, 0.95);
+      background: radial-gradient(circle at top, rgba(74, 222, 128, 0.6), rgba(15, 23, 42, 1));
+    }
+
+    .rarity-common {
+      border-color: rgba(148, 163, 184, 0.9);
+      background: radial-gradient(circle at top, rgba(148, 163, 184, 0.45), rgba(15,23,42,1));
+    }
+
+    .rarity-rare {
+      border-color: rgba(59, 130, 246, 0.95);
+      background: radial-gradient(circle at top, rgba(59,130,246,0.6), rgba(15,23,42,1));
+    }
+
+    .rarity-epic {
+      border-color: rgba(244, 114, 182, 0.95);
+      background: radial-gradient(circle at top, rgba(236,72,153,0.75), rgba(15,23,42,1));
+    }
+
+    .card-body {
+      font-size: 0.78rem;
+      color: var(--muted);
+      min-height: 30px;
+    }
+
+    .card-footer {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .stars {
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+    }
+
+    .stars span {
+      filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.7));
+    }
+
+    .xp-bar {
+      width: 54px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      overflow: hidden;
+    }
+
+    .xp-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      transition: width 0.25s ease-out;
+    }
+
+    .topic-pill {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .topic-pill span {
+      opacity: 0.9;
+    }
+
+    .feedback {
+      margin-top: 9px;
+      font-size: 0.82rem;
+      min-height: 20px;
+    }
+
+    .feedback.good {
+      color: var(--success);
+    }
+
+    .feedback.bad {
+      color: var(--danger);
+    }
+
+    .feedback span.highlight {
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    footer {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    footer span {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <div class="game">
+    <header>
+      <div class="title-block">
+        <div class="title-pill">Vocabulary Card Battle · Hero Edition</div>
+        <h1>
+          Đấu boss bằng từ vựng
+          <span>🧙‍♀️⚔️👾</span>
+        </h1>
+        <p class="subtitle">
+          Mỗi lần chọn đúng <strong>từ tiếng Anh</strong>, anh hùng của bạn tung chiêu gây sát thương lên quái vật.
+          Lá bài càng được dùng đúng nhiều → càng lên level & nhiều sao ⭐.
+        </p>
+      </div>
+      <div class="controls">
+        <div class="pill">
+          ⏱ <span>Vòng chơi nhanh ~1–3 phút</span>
+        </div>
+        <div class="pill">
+          🎮 <span>Click vào lá bài để tấn công</span>
+        </div>
+        <button id="restart-btn">Chơi lại</button>
+      </div>
+    </header>
+
+    <main class="board">
+      <!-- LEFT: Status + Question -->
+      <section class="panel">
+        <h2>
+          Chiến trường từ vựng
+          <span class="tag" id="round-label">Màn 1</span>
+        </h2>
+
+        <div class="status-top">
+          <!-- Hero -->
+          <div class="card-shell">
+            <div class="card-inner">
+              <div class="char-row">
+                <div>
+                  <div class="player-name">
+                    <span id="player-name">Người học từ</span>
+                    <span class="label">Anh hùng</span>
+                  </div>
+                  <div class="tiny-tagline" id="player-tagline">Sử dụng từ vựng để tung phép thuật.</div>
+                </div>
+                <div class="char-avatar hero" id="player-sprite">🧙‍♀️</div>
+              </div>
+              <div class="hp-bar">
+                <div class="hp-bar-inner" id="player-hp-bar"></div>
+              </div>
+              <div class="stats-row">
+                <div><span class="label">HP:</span> <strong id="player-hp-text">20 / 20</strong></div>
+                <div>
+                  <span class="label">Điểm:</span> <strong id="score-text">0</strong>
+                  &nbsp;&nbsp; <span class="label">Chuỗi đúng:</span> <strong id="streak-text">0</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enemy -->
+          <div class="card-shell">
+            <div class="card-inner">
+              <div class="char-row">
+                <div>
+                  <div class="enemy-name">
+                    <span id="enemy-name">Goblin Ngữ Pháp</span>
+                    <span class="label">Quái vật</span>
+                  </div>
+                  <div class="tiny-tagline" id="enemy-tagline">Say mê bắt lỗi từ vựng của bạn.</div>
+                </div>
+                <div class="char-avatar enemy" id="enemy-sprite">👹</div>
+              </div>
+              <div class="hp-bar">
+                <div class="hp-bar-inner enemy" id="enemy-hp-bar"></div>
+              </div>
+              <div class="stats-row">
+                <div><span class="label">HP:</span> <strong id="enemy-hp-text">10 / 10</strong></div>
+                <div><span class="label">Lv.</span> <strong id="enemy-level">1</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question -->
+        <div class="question-box">
+          <div class="question-title">Nhiệm vụ của bạn</div>
+          <p id="question-meaning">Nhấn "Chơi lại" nếu game chưa bắt đầu.</p>
+          <p id="question-example"></p>
+          <p class="tiny-hint">
+            Gợi ý: đọc kỹ <strong>nghĩa tiếng Việt</strong> & câu ví dụ rồi chọn
+            <strong>từ tiếng Anh</strong> phù hợp nhất ở bên phải. Câu đúng = 1 đòn tấn công.
+          </p>
+        </div>
+      </section>
+
+      <!-- RIGHT: Hand -->
+      <section class="panel">
+        <h2>
+          Bộ bài phép thuật
+          <span class="tag">Đang rút ngẫu nhiên 4 lá / lượt</span>
+        </h2>
+        <div id="hand" class="hand">
+          <!-- Cards render here -->
+        </div>
+        <div id="feedback" class="feedback"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span>💡 Em có thể sửa danh sách từ trong biến <code>vocabulary</code> bên dưới cho đúng chủ đề muốn học.</span>
+      <span>Prototype by em & anh ChatGPT – học từ như chơi RPG, không buồn ngủ.</span>
+    </footer>
+  </div>
+
+  <script>
+    // ================== DATA ==================
+    // Danh sách từ – em chỉnh tuỳ ý
+    const vocabulary = [
+      {
+        id: 1,
+        word: "negotiate",
+        meaning: "đàm phán, thương lượng",
+        example: "We need to negotiate a better price with the supplier.",
+        rarity: "rare",
+        topic: "business"
+      },
+      {
+        id: 2,
+        word: "deadline",
+        meaning: "hạn chót, thời hạn",
+        example: "The deadline for this project is next Monday.",
+        rarity: "common",
+        topic: "business"
+      },
+      {
+        id: 3,
+        word: "efficient",
+        meaning: "hiệu quả (sử dụng ít thời gian/công sức)",
+        example: "This new method is much more efficient than the old one.",
+        rarity: "common",
+        topic: "work"
+      },
+      {
+        id: 4,
+        word: "reliable",
+        meaning: "đáng tin cậy",
+        example: "She is a reliable colleague who always finishes her tasks.",
+        rarity: "common",
+        topic: "personality"
+      },
+      {
+        id: 5,
+        word: "persuade",
+        meaning: "thuyết phục",
+        example: "He managed to persuade his boss to accept the idea.",
+        rarity: "rare",
+        topic: "communication"
+      },
+      {
+        id: 6,
+        word: "exhausted",
+        meaning: "kiệt sức, mệt lử",
+        example: "I felt exhausted after working all night.",
+        rarity: "common",
+        topic: "feelings"
+      },
+      {
+        id: 7,
+        word: "curious",
+        meaning: "tò mò, hiếu kỳ",
+        example: "The child was very curious about how the machine worked.",
+        rarity: "common",
+        topic: "personality"
+      },
+      {
+        id: 8,
+        word: "conference",
+        meaning: "hội nghị, cuộc họp lớn",
+        example: "She is attending an international conference this week.",
+        rarity: "rare",
+        topic: "business"
+      },
+      {
+        id: 9,
+        word: "priority",
+        meaning: "ưu tiên, việc quan trọng trước",
+        example: "Safety is our top priority.",
+        rarity: "rare",
+        topic: "work"
+      },
+      {
+        id: 10,
+        word: "reschedule",
+        meaning: "dời lịch, sắp xếp lại thời gian",
+        example: "Can we reschedule the meeting to tomorrow afternoon?",
+        rarity: "epic",
+        topic: "business"
+      }
+    ];
+
+    // Hero & quái cho có "nhân vật"
+    const heroes = [
+      {
+        name: "Pháp Sư Từ Vựng",
+        sprite: "🧙‍♀️",
+        tagline: "Biến từ vựng thành phép thuật."
+      },
+      {
+        name: "Hiệp Sĩ Ngữ Pháp",
+        sprite: "🛡️",
+        tagline: "Bảo vệ câu cú khỏi lỗi sai."
+      },
+      {
+        name: "Trinh Thám Từ Điển",
+        sprite: "🕵️‍♂️",
+        tagline: "Lần theo manh mối từ vựng."
+      },
+      {
+        name: "Học Giả Ghi Chú",
+        sprite: "🧑‍🎓",
+        tagline: "Không bỏ sót một từ nào."
+      }
+    ];
+
+    const enemyTypes = [
+      {
+        label: "Slime Chính Tả",
+        sprite: "🟢",
+        tagline: "Chuyên làm bạn nhầm lẫn spelling."
+      },
+      {
+        label: "Goblin Ngữ Pháp",
+        sprite: "👹",
+        tagline: "Rình rập bắt lỗi cấu trúc câu."
+      },
+      {
+        label: "Phù Thủy Viết Lách",
+        sprite: "🧌",
+        tagline: "Thích dùng từ khó để gây rối."
+      },
+      {
+        label: "Rồng Từ Vựng Non",
+        sprite: "🐉",
+        tagline: "Độ khó tăng mạnh, đòi hỏi vốn từ cao."
+      }
+    ];
+
+    // Mỗi card sẽ có thêm dữ liệu gameplay
+    let deck = [];
+
+    const player = {
+      maxHp: 20,
+      hp: 20,
+      score: 0,
+      streak: 0,
+      name: "Người học từ",
+      sprite: "🧙‍♀️",
+      tagline: "Sử dụng từ vựng để tung phép thuật."
+    };
+
+    const enemy = {
+      name: "Goblin Ngữ Pháp",
+      level: 1,
+      maxHp: 10,
+      hp: 10,
+      baseHp: 10,
+      sprite: "👹",
+      tagline: "Say mê bắt lỗi từ vựng của bạn."
+    };
+
+    let round = 1;
+    const HAND_SIZE = 4;
+    let hand = [];
+    let currentQuestionCard = null;
+    let gameOver = false;
+
+    // ================== UTILS ==================
+    function shuffleArray(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function getRarityLabel(r) {
+      switch (r) {
+        case "common": return "Common";
+        case "rare": return "Rare";
+        case "epic": return "Epic";
+        default: return "Common";
+      }
+    }
+
+    function getRarityClass(r) {
+      switch (r) {
+        case "common": return "rarity-common";
+        case "rare": return "rarity-rare";
+        case "epic": return "rarity-epic";
+        default: return "rarity-common";
+      }
+    }
+
+    function calcDamage(card) {
+      // Sát thương dựa trên level + level quái
+      return 2 + card.level + Math.floor(enemy.level / 2);
+    }
+
+    function calcEnemyHp(level) {
+      return enemy.baseHp + (level - 1) * 4;
+    }
+
+    function clamp(num, min, max) {
+      return Math.min(Math.max(num, min), max);
+    }
+
+    // ================== GAME LOGIC ==================
+    function initDeck() {
+      deck = vocabulary.map((v) => ({
+        ...v,
+        level: 1,
+        xp: 0,
+        mastery: 0, // 0–3 sao
+        correctStreak: 0,
+        seen: 0,
+        wrong: 0
+      }));
+    }
+
+    function pickRandomHero() {
+      const hero = heroes[Math.floor(Math.random() * heroes.length)];
+      player.name = hero.name;
+      player.sprite = hero.sprite;
+      player.tagline = hero.tagline;
+    }
+
+    function pickEnemyForCurrentRound() {
+      // Đổi loại quái theo round, lặp vòng quanh mảng enemyTypes
+      const idx = (round - 1) % enemyTypes.length;
+      const type = enemyTypes[idx];
+      enemy.name = type.label;
+      enemy.sprite = type.sprite;
+      enemy.tagline = type.tagline;
+      enemy.maxHp = calcEnemyHp(enemy.level);
+      enemy.hp = enemy.maxHp;
+    }
+
+    function startGame() {
+      player.hp = player.maxHp;
+      player.score = 0;
+      player.streak = 0;
+
+      round = 1;
+      enemy.level = 1;
+      enemy.baseHp = 10;
+
+      pickRandomHero();
+      initDeck();
+      pickEnemyForCurrentRound();
+
+      gameOver = false;
+      drawNewHandAndQuestion();
+      updateAllUI();
+      setFeedback("Chọn lá bài đúng với nghĩa bên trái để anh hùng của bạn tung chiêu đầu tiên! ⚔️", "");
+      toggleRestart(false);
+    }
+
+    function toggleRestart(show) {
+      const btn = document.getElementById("restart-btn");
+      btn.style.display = show ? "inline-flex" : "none";
+    }
+
+    function drawNewHandAndQuestion() {
+      if (gameOver) return;
+
+      // Ưu tiên những lá ít được xem hoặc sai nhiều (như SRS mini)
+      const sorted = deck.slice().sort((a, b) => {
+        const scoreA = a.seen + a.wrong * 2;
+        const scoreB = b.seen + b.wrong * 2;
+        return scoreA - scoreB;
+      });
+      const base = sorted.slice(0, Math.min(6, sorted.length));
+      hand = shuffleArray(base).slice(0, HAND_SIZE);
+
+      // Chọn 1 lá trong hand làm đáp án
+      currentQuestionCard = hand[Math.floor(Math.random() * hand.length)];
+      currentQuestionCard.seen += 1;
+
+      updateQuestionUI();
+      renderHand();
+    }
+
+    function handleCardClick(cardId) {
+      if (gameOver) return;
+      const selected = hand.find((c) => c.id === cardId);
+      if (!selected || !currentQuestionCard) return;
+
+      const isCorrect = selected.id === currentQuestionCard.id;
+
+      if (isCorrect) {
+        // Đúng
+        player.streak += 1;
+        player.score += 10 + 3 * enemy.level + 2 * currentQuestionCard.level;
+        selected.correctStreak += 1;
+
+        // Level + XP
+        selected.xp += 1;
+        if (selected.xp >= 3 && selected.level < 5) {
+          selected.xp = 0;
+          selected.level += 1;
+          if (selected.mastery < 3) {
+            selected.mastery += 1;
+          }
+        }
+
+        const damage = calcDamage(selected);
+        enemy.hp = clamp(enemy.hp - damage, 0, enemy.maxHp);
+
+        setFeedback(
+          `Chuẩn! <span class="highlight">${player.name}</span> dùng lá bài <span class="highlight">${selected.word}</span> gây <span class="highlight">${damage} sát thương</span>!`,
+          "good"
+        );
+
+        if (enemy.hp <= 0) {
+          // Qua màn, quái mới
+          round += 1;
+          enemy.level += 1;
+          pickEnemyForCurrentRound();
+          setFeedback(
+            `🔥 Bạn đã hạ gục <span class="highlight">quái vật</span>! Màn ${round} bắt đầu – quái mạnh hơn nhưng anh hùng của bạn cũng đã dày dạn kinh nghiệm hơn.`,
+            "good"
+          );
+        }
+      } else {
+        // Sai
+        player.streak = 0;
+        const damageTaken = 3 + enemy.level;
+        player.hp = clamp(player.hp - damageTaken, 0, player.maxHp);
+        selected.wrong += 1;
+        currentQuestionCard.wrong += 1;
+
+        setFeedback(
+          `Sai mất rồi 😢 <span class="highlight">${enemy.name}</span> phản đòn, bạn mất <span class="highlight">${damageTaken} HP</span>.<br/>
+          Đáp án đúng: <span class="highlight">${currentQuestionCard.word}</span> – ${currentQuestionCard.meaning}.`,
+          "bad"
+        );
+
+        if (player.hp <= 0) {
+          handleGameOver();
+          return;
+        }
+      }
+
+      updateAllUI();
+
+      // Khoá hand tạm để tránh spam
+      disableHandTemp();
+      setTimeout(() => {
+        drawNewHandAndQuestion();
+        updateAllUI();
+      }, 500);
+    }
+
+    function handleGameOver() {
+      gameOver = true;
+      setFeedback(
+        `Game over 💀 <span class="highlight">${player.name}</span> gục ngã ở màn <span class="highlight">${round}</span>. 
+        Tổng điểm: <span class="highlight">${player.score}</span>. Nhấn "Chơi lại" để thử build mới & luyện lại bộ bài của bạn.`,
+        "bad"
+      );
+      toggleRestart(true);
+      disableHand(true);
+    }
+
+    // ================== UI ==================
+    function updateAllUI() {
+      updateStatusUI();
+      updateQuestionUI();
+      renderHand();
+    }
+
+    function updateStatusUI() {
+      // Hero
+      document.getElementById("player-name").textContent = player.name;
+      document.getElementById("player-sprite").textContent = player.sprite;
+      document.getElementById("player-tagline").textContent = player.tagline;
+
+      document.getElementById("player-hp-text").textContent = `${player.hp} / ${player.maxHp}`;
+      const playerHpBar = document.getElementById("player-hp-bar");
+      const playerHpPercent = (player.hp / player.maxHp) * 100;
+      playerHpBar.style.width = `${playerHpPercent}%`;
+
+      document.getElementById("score-text").textContent = player.score;
+      document.getElementById("streak-text").textContent = player.streak;
+
+      // Enemy
+      document.getElementById("enemy-name").textContent = enemy.name;
+      document.getElementById("enemy-sprite").textContent = enemy.sprite;
+      document.getElementById("enemy-tagline").textContent = enemy.tagline;
+      document.getElementById("enemy-level").textContent = enemy.level;
+      document.getElementById("round-label").textContent = `Màn ${round}`;
+
+      document.getElementById("enemy-hp-text").textContent = `${enemy.hp} / ${enemy.maxHp}`;
+      const enemyHpBar = document.getElementById("enemy-hp-bar");
+      const enemyHpPercent = (enemy.hp / enemy.maxHp) * 100;
+      enemyHpBar.style.width = `${enemyHpPercent}%`;
+    }
+
+    function updateQuestionUI() {
+      const meaningEl = document.getElementById("question-meaning");
+      const exampleEl = document.getElementById("question-example");
+
+      if (!currentQuestionCard) {
+        meaningEl.textContent = 'Nhấn "Chơi lại" để bắt đầu ván mới.';
+        exampleEl.textContent = "";
+        return;
+      }
+
+      meaningEl.textContent = currentQuestionCard.meaning;
+      exampleEl.textContent = "Ví dụ: " + currentQuestionCard.example;
+    }
+
+    function renderHand() {
+      const handContainer = document.getElementById("hand");
+      handContainer.innerHTML = "";
+
+      hand.forEach((card) => {
+        const cardEl = document.createElement("article");
+        cardEl.className = "card";
+        cardEl.dataset.cardId = card.id;
+
+        const rarityClass = getRarityClass(card.rarity);
+        const rarityLabel = getRarityLabel(card.rarity);
+
+        const stars = "★".repeat(card.mastery) + "☆".repeat(3 - card.mastery);
+        const xpPercent = (card.xp / 3) * 100;
+
+        cardEl.innerHTML = `
+          <div class="card-header">
+            <div class="card-word">${card.word}</div>
+            <div class="card-rarity ${rarityClass}">${rarityLabel}</div>
+          </div>
+          <div class="card-body">
+            Level: <strong>${card.level}</strong><br/>
+            Đã gặp: ${card.seen} lần
+            <div class="topic-pill">
+              📚 <span>${card.topic}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="stars">${stars.split("").map((s) => `<span>${s}</span>`).join("")}</div>
+            <div class="xp-bar">
+              <div class="xp-fill" style="width:${xpPercent}%;"></div>
+            </div>
+          </div>
+        `;
+
+        cardEl.addEventListener("click", () => handleCardClick(card.id));
+        handContainer.appendChild(cardEl);
+      });
+    }
+
+    function setFeedback(message, type) {
+      const feedbackEl = document.getElementById("feedback");
+      feedbackEl.className = "feedback";
+      if (type === "good") feedbackEl.classList.add("good");
+      if (type === "bad") feedbackEl.classList.add("bad");
+      feedbackEl.innerHTML = message;
+    }
+
+    function disableHandTemp() {
+      disableHand(true);
+      setTimeout(() => disableHand(false), 450);
+    }
+
+    function disableHand(disabled) {
+      const handContainer = document.getElementById("hand");
+      const cards = handContainer.querySelectorAll(".card");
+      cards.forEach((cardEl) => {
+        if (disabled) {
+          cardEl.classList.add("disabled");
+        } else {
+          cardEl.classList.remove("disabled");
+        }
+      });
+    }
+
+    // ================== INIT ==================
+    document.addEventListener("DOMContentLoaded", () => {
+      const restartBtn = document.getElementById("restart-btn");
+      restartBtn.addEventListener("click", startGame);
+
+      // Khởi động game lần đầu
+      startGame();
+    });
+  </script>
+</body>
+</html>
