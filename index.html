@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>Vocabulary Card Battle – Hero Edition</title>
+  <title>Vocab Adventure v2 (KR)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
       --bg: #020617;
-      --bg-soft: #020617;
-      --accent: #22c55e;
-      --accent-soft: rgba(34, 197, 94, 0.2);
-      --accent-strong: #a855f7;
-      --text: #f9fafb;
+      --panel: #020617;
+      --panel-soft: #020617;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.18);
+      --accent-strong: #22c55e;
+      --text: #e5e7eb;
       --muted: #9ca3af;
-      --danger: #fb7185;
+      --danger: #f97373;
       --success: #4ade80;
-      --card: rgba(15, 23, 42, 0.96);
-      --border-subtle: rgba(148, 163, 184, 0.25);
-      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.85);
-      --radius-xl: 18px;
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --tile: rgba(15, 23, 42, 0.95);
+      --tile-alt: rgba(15, 23, 42, 0.85);
     }
 
     * {
@@ -30,7 +30,7 @@
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top, #0f172a 0, rgba(6, 78, 59, 0.7) 25%, #020617 55%, #000 100%);
+        radial-gradient(circle at top, #0f172a 0, rgba(15,23,42,0.85) 35%, #000 100%);
       color: var(--text);
       display: flex;
       align-items: center;
@@ -40,12 +40,15 @@
 
     .game {
       width: 100%;
-      max-width: 1120px;
-      background: radial-gradient(circle at top left, rgba(22, 101, 52, 0.35), rgba(15,23,42,0.96));
+      max-width: 1080px;
       border-radius: 24px;
-      padding: 18px 20px 22px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(34, 197, 94, 0.45);
+      padding: 16px 18px 18px;
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,0.4), rgba(15,23,42,0.96));
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      box-shadow:
+        0 24px 60px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(18px);
     }
 
@@ -53,39 +56,37 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
     .title-block h1 {
       margin: 0;
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       letter-spacing: 0.04em;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .title-block h1 span {
-      font-size: 1.6rem;
-    }
-
     .title-pill {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
-      color: var(--accent);
+      color: var(--accent-strong);
       padding: 3px 10px;
       border-radius: 999px;
       border: 1px solid var(--accent-soft);
       background:
-        radial-gradient(circle at top left, rgba(22,163,74,0.6), transparent);
+        radial-gradient(circle at top left, rgba(59,130,246,0.5), transparent);
     }
 
     .subtitle {
-      margin: 3px 0 0;
+      margin: 4px 0 0;
       font-size: 0.82rem;
       color: var(--muted);
+      max-width: 480px;
     }
 
     .controls {
@@ -105,37 +106,41 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.96);
     }
 
     .pill span {
-      opacity: 0.8;
+      opacity: 0.9;
     }
 
     #restart-btn {
       border: none;
-      padding: 6px 13px;
+      padding: 6px 14px;
       border-radius: 999px;
-      background: radial-gradient(circle at top left, var(--accent), #4ade80);
-      color: #022c22;
+      background:
+        radial-gradient(circle at top left, #3b82f6, #22c55e);
+      color: #ecfeff;
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 0 0 1px rgba(22, 163, 74, 0.65),
-                  0 12px 30px rgba(22, 163, 74, 0.65);
+      box-shadow:
+        0 0 0 1px rgba(59,130,246,0.6),
+        0 14px 32px rgba(30, 64, 175, 0.9);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       display: none;
     }
 
     #restart-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 16px 35px rgba(22, 163, 74, 0.85);
+      box-shadow:
+        0 0 0 1px rgba(96,165,250,0.9),
+        0 18px 40px rgba(30, 64, 175, 0.95);
     }
 
     main.board {
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-      gap: 14px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: 12px;
     }
 
     @media (max-width: 840px) {
@@ -145,15 +150,16 @@
     }
 
     .panel {
-      background: radial-gradient(circle at top left, rgba(22, 163, 74, 0.28), rgba(15,23,42,0.96));
-      border-radius: var(--radius-xl);
-      padding: 12px 12px 14px;
-      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.95), rgba(15,23,42,1));
+      border-radius: 18px;
+      padding: 10px 10px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.9);
     }
 
     .panel h2 {
       margin: 0 0 8px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       text-transform: uppercase;
       letter-spacing: 0.15em;
       color: var(--muted);
@@ -168,312 +174,254 @@
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.4);
       color: var(--muted);
-      background: rgba(15,23,42,0.85);
+      background: rgba(15,23,42,0.96);
     }
 
-    .status-top {
+    /* MAP */
+    .map-wrapper {
+      border-radius: 14px;
+      padding: 6px;
+      background:
+        radial-gradient(circle at top, rgba(30,64,175,0.4), rgba(15,23,42,0.96));
+      border: 1px solid rgba(30, 64, 175, 0.7);
+    }
+
+    #map {
       display: grid;
-      grid-template-columns: 1.02fr 0.98fr;
-      gap: 8px;
-      margin-bottom: 10px;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 3px;
     }
 
-    .card-shell {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 9px 10px 11px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.85);
+    .tile {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      background: var(--tile);
+      border: 1px solid rgba(15,23,42,0.9);
       position: relative;
-      overflow: hidden;
-    }
-
-    .card-shell::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      opacity: 0.08;
-      background: conic-gradient(
-        from 180deg at 50% 50%,
-        rgba(22, 163, 74, 1),
-        rgba(34, 197, 94, 1),
-        rgba(190, 242, 100, 1),
-        rgba(22, 163, 74, 1)
-      );
-      filter: blur(24px);
-      pointer-events: none;
-    }
-
-    .card-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .char-row {
+      font-size: 1.2rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+      justify-content: center;
+      color: #e5e7eb;
+      box-shadow: inset 0 0 0 1px rgba(15,23,42,0.9);
     }
 
-    .enemy-name,
-    .player-name {
+    .tile.alt {
+      background: var(--tile-alt);
+    }
+
+    .tile.player {
+      box-shadow:
+        0 0 0 2px rgba(129, 140, 248, 0.9),
+        0 0 0 1px rgba(15,23,42,1),
+        0 10px 18px rgba(37,99,235,0.7);
+    }
+
+    .tile.enemy {
+      box-shadow:
+        0 0 0 2px rgba(248, 113, 113, 0.95),
+        0 0 0 1px rgba(15,23,42,1),
+        0 10px 18px rgba(185,28,28,0.85);
+    }
+
+    .tile.item {
+      box-shadow:
+        0 0 0 2px rgba(52, 211, 153, 0.95),
+        0 0 0 1px rgba(15,23,42,1),
+        0 10px 18px rgba(16,185,129,0.8);
+    }
+
+    .tile.exit {
+      box-shadow:
+        0 0 0 2px rgba(250, 204, 21, 0.95),
+        0 0 0 1px rgba(15,23,42,1),
+        0 10px 18px rgba(202,138,4,0.85);
+    }
+
+    .legend {
+      margin-top: 7px;
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 4px;
-    }
-
-    .enemy-name span:first-child,
-    .player-name span:first-child {
-      font-size: 0.86rem;
-      font-weight: 600;
-    }
-
-    .label {
+      gap: 10px;
+      flex-wrap: wrap;
       font-size: 0.75rem;
       color: var(--muted);
     }
 
-    .char-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.7rem;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+      font-size: 0.9rem;
     }
 
-    .char-avatar.hero {
-      background: radial-gradient(circle at top, rgba(34, 197, 94, 0.6), rgba(15,23,42,1));
-      border: 1px solid rgba(34, 197, 94, 0.8);
+    .legend-icon.player {
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+    .legend-icon.enemy {
+      border-color: rgba(248, 113, 113, 0.9);
+    }
+    .legend-icon.item {
+      border-color: rgba(52, 211, 153, 0.95);
+    }
+    .legend-icon.exit {
+      border-color: rgba(250, 204, 21, 0.95);
     }
 
-    .char-avatar.enemy {
-      background: radial-gradient(circle at top, rgba(239, 68, 68, 0.6), rgba(15,23,42,1));
-      border: 1px solid rgba(248, 113, 113, 0.9);
+    /* HUD / Question */
+    .hud-top {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .hud-top {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hud-card {
+      border-radius: 12px;
+      padding: 8px 9px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+    }
+
+    .hud-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: baseline;
+      font-size: 0.8rem;
+    }
+
+    .hud-row strong {
+      font-size: 0.9rem;
     }
 
     .hp-bar {
       margin-top: 6px;
       width: 100%;
-      height: 9px;
+      height: 8px;
       border-radius: 999px;
       background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.6);
       overflow: hidden;
     }
 
-    .hp-bar-inner {
+    .hp-fill {
       height: 100%;
+      width: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, #22c55e, #a3e635, #facc15);
-      width: 100%;
       transition: width 0.25s ease-out;
     }
 
-    .hp-bar-inner.enemy {
-      background: linear-gradient(90deg, #fb7185, #fb923c, #facc15);
-    }
-
-    .stats-row {
-      margin-top: 6px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78rem;
-      color: var(--muted);
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    .stats-row strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .tiny-tagline {
-      margin-top: 5px;
-      font-size: 0.74rem;
-      color: var(--muted);
-      opacity: 0.9;
+    .hp-fill.low {
+      background: linear-gradient(90deg, #f97373, #fb923c);
     }
 
     .question-box {
-      margin-top: 8px;
+      margin-top: 3px;
+      border-radius: 12px;
       padding: 8px 9px;
-      border-radius: 14px;
-      background: rgba(15,23,42,0.95);
-      border: 1px dashed rgba(148, 163, 184, 0.55);
-      font-size: 0.85rem;
+      background: rgba(2, 6, 23, 0.96);
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      font-size: 0.83rem;
     }
 
     .question-title {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.15em;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     #question-meaning {
-      margin: 0 0 5px;
+      margin: 0 0 4px;
       font-size: 0.9rem;
     }
 
     #question-example {
       margin: 0;
-      color: var(--muted);
       font-size: 0.78rem;
+      color: var(--muted);
       font-style: italic;
     }
 
     .tiny-hint {
       margin-top: 4px;
-      font-size: 0.74rem;
+      font-size: 0.75rem;
       color: var(--muted);
     }
 
-    .hand {
+    .answer-list {
+      margin-top: 8px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
+      grid-template-columns: 1fr;
+      gap: 5px;
     }
 
-    .card {
-      position: relative;
-      padding: 10px 9px 11px;
-      border-radius: 16px;
-      background: radial-gradient(circle at top left, rgba(21, 128, 61, 0.65), rgba(15,23,42,1));
-      border: 1px solid rgba(74, 222, 128, 0.75);
+    .answer-btn {
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 0.82rem;
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text);
+      text-align: left;
       cursor: pointer;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
-      transform-origin: center bottom;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
       transition:
-        transform 0.16s ease,
-        box-shadow 0.16s ease,
-        border-color 0.16s ease,
-        background 0.16s ease,
-        filter 0.16s ease;
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.12s ease,
+        box-shadow 0.12s ease;
     }
 
-    .card:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 22px 50px rgba(34, 197, 94, 0.7);
-      border-color: rgba(190, 242, 100, 0.9);
-      background: radial-gradient(circle at top left, rgba(101,163,13,0.8), rgba(15,23,42,1));
-      filter: saturate(1.2);
+    .answer-btn span.word {
+      font-weight: 600;
     }
 
-    .card.disabled {
-      opacity: 0.4;
-      pointer-events: none;
-      transform: translateY(0) scale(1);
-      box-shadow: none;
-      filter: grayscale(0.4);
+    .answer-btn:hover {
+      background: rgba(30, 64, 175, 0.85);
+      border-color: rgba(59, 130, 246, 0.9);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.95);
     }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 4px;
-      margin-bottom: 4px;
+    .answer-btn.correct {
+      background: rgba(22, 163, 74, 0.95);
+      border-color: rgba(74, 222, 128, 0.95);
+      color: #ecfdf5;
     }
 
-    .card-word {
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      font-size: 0.95rem;
-    }
-
-    .card-rarity {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      padding: 2px 7px;
-      border-radius: 999px;
-      letter-spacing: 0.12em;
-      border: 1px solid rgba(190, 242, 100, 0.9);
-      color: rgba(236, 253, 245, 0.95);
-      background: radial-gradient(circle at top, rgba(74, 222, 128, 0.6), rgba(15, 23, 42, 1));
-    }
-
-    .rarity-common {
-      border-color: rgba(148, 163, 184, 0.9);
-      background: radial-gradient(circle at top, rgba(148, 163, 184, 0.45), rgba(15,23,42,1));
-    }
-
-    .rarity-rare {
-      border-color: rgba(59, 130, 246, 0.95);
-      background: radial-gradient(circle at top, rgba(59,130,246,0.6), rgba(15,23,42,1));
-    }
-
-    .rarity-epic {
-      border-color: rgba(244, 114, 182, 0.95);
-      background: radial-gradient(circle at top, rgba(236,72,153,0.75), rgba(15,23,42,1));
-    }
-
-    .card-body {
-      font-size: 0.78rem;
-      color: var(--muted);
-      min-height: 30px;
-    }
-
-    .card-footer {
-      margin-top: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.74rem;
-      color: var(--muted);
-    }
-
-    .stars {
-      font-size: 0.7rem;
-      letter-spacing: 0.06em;
-    }
-
-    .stars span {
-      filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.7));
-    }
-
-    .xp-bar {
-      width: 54px;
-      height: 5px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.75);
-      overflow: hidden;
-    }
-
-    .xp-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #22c55e, #a3e635);
-      transition: width 0.25s ease-out;
-    }
-
-    .topic-pill {
-      font-size: 0.7rem;
-      padding: 2px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.5);
-      color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 4px;
-    }
-
-    .topic-pill span {
-      opacity: 0.9;
+    .answer-btn.wrong {
+      background: rgba(248, 113, 113, 0.95);
+      border-color: rgba(254, 202, 202, 0.95);
+      color: #fef2f2;
     }
 
     .feedback {
-      margin-top: 9px;
+      margin-top: 8px;
       font-size: 0.82rem;
-      min-height: 20px;
+      min-height: 18px;
     }
 
     .feedback.good {
@@ -490,7 +438,7 @@
     }
 
     footer {
-      margin-top: 10px;
+      margin-top: 9px;
       font-size: 0.75rem;
       color: var(--muted);
       display: flex;
@@ -500,288 +448,216 @@
     }
 
     footer span {
-      opacity: 0.85;
+      opacity: 0.9;
+    }
+
+    /* Overlay khi đang hỏi */
+    .question-active #map {
+      filter: brightness(0.6) blur(1px);
+      transition: filter 0.15s ease;
     }
   </style>
 </head>
 <body>
-  <div class="game">
+  <div class="game" id="game-root">
     <header>
       <div class="title-block">
-        <div class="title-pill">Vocabulary Card Battle · Hero Edition</div>
-        <h1>
-          Đấu boss bằng từ vựng
-          <span>🧙‍♀️⚔️👾</span>
-        </h1>
+        <div class="title-pill">Vocab Adventure · v2</div>
+        <h1>몬스터 잡고 어휘 모으기 🧙‍♀️👾❤️🚪</h1>
         <p class="subtitle">
-          Mỗi lần chọn đúng <strong>từ tiếng Anh</strong>, anh hùng của bạn tung chiêu gây sát thương lên quái vật.
-          Lá bài càng được dùng đúng nhiều → càng lên level & nhiều sao ⭐.
+          키보드 <strong>← ↑ ↓ →</strong> 또는 <strong>W A S D</strong> 로 캐릭터를 움직이세요.
+          👾 몬스터와 부딪히면 어휘 문제가 나오고, ❤️ 아이템은 체력을 회복합니다. 🚪 문으로 가면 다음 레벨!
         </p>
       </div>
       <div class="controls">
         <div class="pill">
-          ⏱ <span>Vòng chơi nhanh ~1–3 phút</span>
+          ⌨️ <span>조작: ← ↑ ↓ → / W A S D</span>
         </div>
         <div class="pill">
-          🎮 <span>Click vào lá bài để tấn công</span>
+          🎯 <span>몬스터 = 문제, ❤️ = 체력 회복</span>
         </div>
-        <button id="restart-btn">Chơi lại</button>
+        <button id="restart-btn">다시 시작</button>
       </div>
     </header>
 
     <main class="board">
-      <!-- LEFT: Status + Question -->
+      <!-- MAP -->
       <section class="panel">
         <h2>
-          Chiến trường từ vựng
-          <span class="tag" id="round-label">Màn 1</span>
+          어휘 맵
+          <span class="tag" id="level-label">레벨 1</span>
         </h2>
-
-        <div class="status-top">
-          <!-- Hero -->
-          <div class="card-shell">
-            <div class="card-inner">
-              <div class="char-row">
-                <div>
-                  <div class="player-name">
-                    <span id="player-name">Người học từ</span>
-                    <span class="label">Anh hùng</span>
-                  </div>
-                  <div class="tiny-tagline" id="player-tagline">Sử dụng từ vựng để tung phép thuật.</div>
-                </div>
-                <div class="char-avatar hero" id="player-sprite">🧙‍♀️</div>
-              </div>
-              <div class="hp-bar">
-                <div class="hp-bar-inner" id="player-hp-bar"></div>
-              </div>
-              <div class="stats-row">
-                <div><span class="label">HP:</span> <strong id="player-hp-text">20 / 20</strong></div>
-                <div>
-                  <span class="label">Điểm:</span> <strong id="score-text">0</strong>
-                  &nbsp;&nbsp; <span class="label">Chuỗi đúng:</span> <strong id="streak-text">0</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Enemy -->
-          <div class="card-shell">
-            <div class="card-inner">
-              <div class="char-row">
-                <div>
-                  <div class="enemy-name">
-                    <span id="enemy-name">Goblin Ngữ Pháp</span>
-                    <span class="label">Quái vật</span>
-                  </div>
-                  <div class="tiny-tagline" id="enemy-tagline">Say mê bắt lỗi từ vựng của bạn.</div>
-                </div>
-                <div class="char-avatar enemy" id="enemy-sprite">👹</div>
-              </div>
-              <div class="hp-bar">
-                <div class="hp-bar-inner enemy" id="enemy-hp-bar"></div>
-              </div>
-              <div class="stats-row">
-                <div><span class="label">HP:</span> <strong id="enemy-hp-text">10 / 10</strong></div>
-                <div><span class="label">Lv.</span> <strong id="enemy-level">1</strong></div>
-              </div>
-            </div>
-          </div>
+        <div class="map-wrapper">
+          <div id="map"></div>
         </div>
-
-        <!-- Question -->
-        <div class="question-box">
-          <div class="question-title">Nhiệm vụ của bạn</div>
-          <p id="question-meaning">Nhấn "Chơi lại" nếu game chưa bắt đầu.</p>
-          <p id="question-example"></p>
-          <p class="tiny-hint">
-            Gợi ý: đọc kỹ <strong>nghĩa tiếng Việt</strong> & câu ví dụ rồi chọn
-            <strong>từ tiếng Anh</strong> phù hợp nhất ở bên phải. Câu đúng = 1 đòn tấn công.
-          </p>
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-icon player">🙂</div> <span>플레이어</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-icon enemy">👾</div> <span>어휘 문제가 걸린 몬스터</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-icon item">❤️</div> <span>체력 +1 아이템</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-icon exit">🚪</div> <span>다음 레벨로 가는 문</span>
+          </div>
         </div>
       </section>
 
-      <!-- RIGHT: Hand -->
+      <!-- HUD / QUESTION -->
       <section class="panel">
         <h2>
-          Bộ bài phép thuật
-          <span class="tag">Đang rút ngẫu nhiên 4 lá / lượt</span>
+          상태 & 문제
+          <span class="tag">몬스터 1마리 = 단어 1개</span>
         </h2>
-        <div id="hand" class="hand">
-          <!-- Cards render here -->
+
+        <div class="hud-top">
+          <div class="hud-card">
+            <div class="hud-row">
+              <div>캐릭터:</div>
+              <strong id="player-name">어휘 모험가</strong>
+            </div>
+            <div class="hud-row" style="margin-top:4px;">
+              <div>점수:</div>
+              <strong id="score-text">0</strong>
+            </div>
+            <div class="hud-row" style="margin-top:2px;">
+              <div>체력:</div>
+              <strong id="hp-text">3 / 3</strong>
+            </div>
+            <div class="hp-bar">
+              <div class="hp-fill" id="hp-fill"></div>
+            </div>
+            <div class="hud-row" style="margin-top:4px;">
+              <div>남은 몬스터:</div>
+              <strong id="enemies-left-text">0</strong>
+            </div>
+          </div>
+
+          <div class="hud-card">
+            <div class="hud-row">
+              <div>플레이 방법:</div>
+            </div>
+            <p class="tiny-hint" style="margin-top:6px;">
+              • 방향키 / WASD 로 이동합니다.<br/>
+              • 👾 몬스터와 부딪히면: 한국어 뜻을 보고 알맞은 영어 단어를 고르세요.<br/>
+              • ❤️ 를 먹으면 체력이 1 회복됩니다 (최대 3).<br/>
+              • 모든 몬스터를 잡으면 🚪 문이 나타납니다. 문으로 들어가면 다음 레벨!
+            </p>
+          </div>
         </div>
+
+        <div class="question-box">
+          <div class="question-title">어휘 문제</div>
+          <p id="question-meaning">👾 몬스터 칸으로 이동하면 문제가 시작됩니다!</p>
+          <p id="question-example"></p>
+          <p class="tiny-hint">
+            팁: 먼저 <strong>한국어 뜻</strong>을 보고, 문장은 사용 예시로 가볍게 참고하세요.
+          </p>
+          <div class="answer-list" id="answer-list">
+            <!-- 답안 버튼이 여기 렌더링됨 -->
+          </div>
+        </div>
+
         <div id="feedback" class="feedback"></div>
       </section>
     </main>
 
     <footer>
-      <span>💡 Em có thể sửa danh sách từ trong biến <code>vocabulary</code> bên dưới cho đúng chủ đề muốn học.</span>
-      <span>Prototype by em & anh ChatGPT – học từ như chơi RPG, không buồn ngủ.</span>
+      <span>💡 단어 세트를 바꾸고 싶다면 아래 스크립트의 <code>vocabulary</code> 배열을 수정하세요.</span>
+      <span>Prototype by you & ChatGPT – 한국 팀도 같이 쓸 수 있는 어휘 모험 게임.</span>
     </footer>
   </div>
 
   <script>
-    // ================== DATA ==================
-    // Danh sách từ – em chỉnh tuỳ ý
+    // ========== 어휘 데이터: 여기서 단어/뜻/예문 수정 ==========
     const vocabulary = [
       {
         id: 1,
         word: "negotiate",
-        meaning: "đàm phán, thương lượng",
-        example: "We need to negotiate a better price with the supplier.",
-        rarity: "rare",
-        topic: "business"
+        meaning: "협상하다, 교섭하다",
+        example: "We need to negotiate a better price with the supplier."
       },
       {
         id: 2,
         word: "deadline",
-        meaning: "hạn chót, thời hạn",
-        example: "The deadline for this project is next Monday.",
-        rarity: "common",
-        topic: "business"
+        meaning: "마감 기한, 데드라인",
+        example: "The deadline for this project is next Monday."
       },
       {
         id: 3,
         word: "efficient",
-        meaning: "hiệu quả (sử dụng ít thời gian/công sức)",
-        example: "This new method is much more efficient than the old one.",
-        rarity: "common",
-        topic: "work"
+        meaning: "효율적인 (시간·노력을 적게 쓰는)",
+        example: "This new method is much more efficient than the old one."
       },
       {
         id: 4,
         word: "reliable",
-        meaning: "đáng tin cậy",
-        example: "She is a reliable colleague who always finishes her tasks.",
-        rarity: "common",
-        topic: "personality"
+        meaning: "믿을 만한, 신뢰할 수 있는",
+        example: "She is a reliable colleague who always finishes her tasks."
       },
       {
         id: 5,
         word: "persuade",
-        meaning: "thuyết phục",
-        example: "He managed to persuade his boss to accept the idea.",
-        rarity: "rare",
-        topic: "communication"
+        meaning: "설득하다",
+        example: "He managed to persuade his boss to accept the idea."
       },
       {
         id: 6,
         word: "exhausted",
-        meaning: "kiệt sức, mệt lử",
-        example: "I felt exhausted after working all night.",
-        rarity: "common",
-        topic: "feelings"
+        meaning: "기진맥진한, 매우 피곤한",
+        example: "I felt exhausted after working all night."
       },
       {
         id: 7,
         word: "curious",
-        meaning: "tò mò, hiếu kỳ",
-        example: "The child was very curious about how the machine worked.",
-        rarity: "common",
-        topic: "personality"
+        meaning: "호기심이 많은, 궁금한",
+        example: "The child was very curious about how the machine worked."
       },
       {
         id: 8,
         word: "conference",
-        meaning: "hội nghị, cuộc họp lớn",
-        example: "She is attending an international conference this week.",
-        rarity: "rare",
-        topic: "business"
+        meaning: "회의, 학회, 컨퍼런스",
+        example: "She is attending an international conference this week."
       },
       {
         id: 9,
         word: "priority",
-        meaning: "ưu tiên, việc quan trọng trước",
-        example: "Safety is our top priority.",
-        rarity: "rare",
-        topic: "work"
+        meaning: "우선순위, 가장 중요한 것",
+        example: "Safety is our top priority."
       },
       {
         id: 10,
         word: "reschedule",
-        meaning: "dời lịch, sắp xếp lại thời gian",
-        example: "Can we reschedule the meeting to tomorrow afternoon?",
-        rarity: "epic",
-        topic: "business"
+        meaning: "일정을 변경하다, 다시 잡다",
+        example: "Can we reschedule the meeting to tomorrow afternoon?"
       }
     ];
 
-    // Hero & quái cho có "nhân vật"
-    const heroes = [
-      {
-        name: "Pháp Sư Từ Vựng",
-        sprite: "🧙‍♀️",
-        tagline: "Biến từ vựng thành phép thuật."
-      },
-      {
-        name: "Hiệp Sĩ Ngữ Pháp",
-        sprite: "🛡️",
-        tagline: "Bảo vệ câu cú khỏi lỗi sai."
-      },
-      {
-        name: "Trinh Thám Từ Điển",
-        sprite: "🕵️‍♂️",
-        tagline: "Lần theo manh mối từ vựng."
-      },
-      {
-        name: "Học Giả Ghi Chú",
-        sprite: "🧑‍🎓",
-        tagline: "Không bỏ sót một từ nào."
-      }
-    ];
-
-    const enemyTypes = [
-      {
-        label: "Slime Chính Tả",
-        sprite: "🟢",
-        tagline: "Chuyên làm bạn nhầm lẫn spelling."
-      },
-      {
-        label: "Goblin Ngữ Pháp",
-        sprite: "👹",
-        tagline: "Rình rập bắt lỗi cấu trúc câu."
-      },
-      {
-        label: "Phù Thủy Viết Lách",
-        sprite: "🧌",
-        tagline: "Thích dùng từ khó để gây rối."
-      },
-      {
-        label: "Rồng Từ Vựng Non",
-        sprite: "🐉",
-        tagline: "Độ khó tăng mạnh, đòi hỏi vốn từ cao."
-      }
-    ];
-
-    // Mỗi card sẽ có thêm dữ liệu gameplay
-    let deck = [];
+    // ========== GAME STATE ==========
+    const GRID_WIDTH = 10;
+    const GRID_HEIGHT = 7;
 
     const player = {
-      maxHp: 20,
-      hp: 20,
-      score: 0,
-      streak: 0,
-      name: "Người học từ",
-      sprite: "🧙‍♀️",
-      tagline: "Sử dụng từ vựng để tung phép thuật."
+      x: 0,
+      y: 0,
+      maxHp: 3,
+      hp: 3,
+      score: 0
     };
 
-    const enemy = {
-      name: "Goblin Ngữ Pháp",
-      level: 1,
-      maxHp: 10,
-      hp: 10,
-      baseHp: 10,
-      sprite: "👹",
-      tagline: "Say mê bắt lỗi từ vựng của bạn."
-    };
+    let level = 1;
+    let enemies = []; // {x,y, vocab, alive}
+    let items = [];   // {x,y, heal}
+    let exitDoor = { active: false, x: null, y: null };
 
-    let round = 1;
-    const HAND_SIZE = 4;
-    let hand = [];
-    let currentQuestionCard = null;
+    let isQuestionActive = false;
+    let currentEnemy = null;
     let gameOver = false;
 
-    // ================== UTILS ==================
+    // ========== UTILS ==========
     function shuffleArray(arr) {
       const a = arr.slice();
       for (let i = a.length - 1; i > 0; i--) {
@@ -791,86 +667,345 @@
       return a;
     }
 
-    function getRarityLabel(r) {
-      switch (r) {
-        case "common": return "Common";
-        case "rare": return "Rare";
-        case "epic": return "Epic";
-        default: return "Common";
-      }
-    }
-
-    function getRarityClass(r) {
-      switch (r) {
-        case "common": return "rarity-common";
-        case "rare": return "rarity-rare";
-        case "epic": return "rarity-epic";
-        default: return "rarity-common";
-      }
-    }
-
-    function calcDamage(card) {
-      // Sát thương dựa trên level + level quái
-      return 2 + card.level + Math.floor(enemy.level / 2);
-    }
-
-    function calcEnemyHp(level) {
-      return enemy.baseHp + (level - 1) * 4;
-    }
-
     function clamp(num, min, max) {
       return Math.min(Math.max(num, min), max);
     }
 
-    // ================== GAME LOGIC ==================
-    function initDeck() {
-      deck = vocabulary.map((v) => ({
-        ...v,
-        level: 1,
-        xp: 0,
-        mastery: 0, // 0–3 sao
-        correctStreak: 0,
-        seen: 0,
-        wrong: 0
-      }));
+    function pickRandomVocab(count) {
+      const shuffled = shuffleArray(vocabulary);
+      return shuffled.slice(0, Math.min(count, shuffled.length));
     }
 
-    function pickRandomHero() {
-      const hero = heroes[Math.floor(Math.random() * heroes.length)];
-      player.name = hero.name;
-      player.sprite = hero.sprite;
-      player.tagline = hero.tagline;
+    function samePos(a, b) {
+      return a.x === b.x && a.y === b.y;
     }
 
-    function pickEnemyForCurrentRound() {
-      // Đổi loại quái theo round, lặp vòng quanh mảng enemyTypes
-      const idx = (round - 1) % enemyTypes.length;
-      const type = enemyTypes[idx];
-      enemy.name = type.label;
-      enemy.sprite = type.sprite;
-      enemy.tagline = type.tagline;
-      enemy.maxHp = calcEnemyHp(enemy.level);
-      enemy.hp = enemy.maxHp;
+    function randomEmptyPos() {
+      while (true) {
+        const pos = {
+          x: Math.floor(Math.random() * GRID_WIDTH),
+          y: Math.floor(Math.random() * GRID_HEIGHT)
+        };
+        const overlapPlayer = samePos(pos, player);
+        const overlapEnemy = enemies.some((e) => e.alive && samePos(e, pos));
+        const overlapItem = items.some((it) => samePos(it, pos));
+        const overlapExit = exitDoor.active && samePos(pos, exitDoor);
+        if (!overlapPlayer && !overlapEnemy && !overlapItem && !overlapExit) {
+          return pos;
+        }
+      }
     }
 
+    // ========== GAME SETUP ==========
     function startGame() {
-      player.hp = player.maxHp;
+      player.x = 0;
+      player.y = Math.floor(GRID_HEIGHT / 2);
+      player.maxHp = 3;
+      player.hp = 3;
       player.score = 0;
-      player.streak = 0;
 
-      round = 1;
-      enemy.level = 1;
-      enemy.baseHp = 10;
-
-      pickRandomHero();
-      initDeck();
-      pickEnemyForCurrentRound();
-
+      level = 1;
       gameOver = false;
-      drawNewHandAndQuestion();
-      updateAllUI();
-      setFeedback("Chọn lá bài đúng với nghĩa bên trái để anh hùng của bạn tung chiêu đầu tiên! ⚔️", "");
+      isQuestionActive = false;
+      currentEnemy = null;
+      enemies = [];
+      items = [];
+      exitDoor = { active: false, x: null, y: null };
+
+      document.getElementById("game-root").classList.remove("question-active");
+      spawnEnemiesForLevel();
+      spawnItemsForLevel();
+
+      updateUI();
+      renderMap();
+      setFeedback("👾 몬스터 쪽으로 이동해서 첫 번째 어휘 문제를 풀어 보세요!", "");
       toggleRestart(false);
+    }
+
+    function spawnEnemiesForLevel() {
+      enemies = [];
+      const enemyCount = clamp(2 + level, 2, 6); // 증가, 최대 6
+      const chosenVocab = pickRandomVocab(enemyCount);
+
+      for (let i = 0; i < chosenVocab.length; i++) {
+        let pos;
+        while (true) {
+          pos = {
+            x: Math.floor(Math.random() * GRID_WIDTH),
+            y: Math.floor(Math.random() * GRID_HEIGHT)
+          };
+          const overlapPlayer = samePos(pos, player);
+          const overlapEnemy = enemies.some((e) => samePos(e, pos));
+          if (!overlapPlayer && !overlapEnemy) break;
+        }
+        enemies.push({
+          x: pos.x,
+          y: pos.y,
+          vocab: chosenVocab[i],
+          alive: true
+        });
+      }
+    }
+
+    function spawnItemsForLevel() {
+      items = [];
+      const itemCount = clamp(1 + Math.floor(level / 2), 1, 4);
+      for (let i = 0; i < itemCount; i++) {
+        const pos = randomEmptyPos();
+        items.push({
+          x: pos.x,
+          y: pos.y,
+          heal: 1
+        });
+      }
+    }
+
+    function spawnExitDoor() {
+      exitDoor.active = true;
+      const pos = randomEmptyPos();
+      exitDoor.x = pos.x;
+      exitDoor.y = pos.y;
+      setFeedback(
+        `✅ 모든 몬스터를 물리쳤습니다! 맵 어딘가에 <span class="highlight">🚪 출구</span>가 열렸어요. 그 문으로 가면 레벨 ${level + 1}(으)로 이동합니다.`,
+        "good"
+      );
+      renderMap();
+      updateUI();
+    }
+
+    // ========== MAP RENDER ==========
+    function renderMap() {
+      const mapEl = document.getElementById("map");
+      mapEl.innerHTML = "";
+      for (let y = 0; y < GRID_HEIGHT; y++) {
+        for (let x = 0; x < GRID_WIDTH; x++) {
+          const tileEl = document.createElement("div");
+          tileEl.className = "tile";
+          if ((x + y) % 2 === 1) tileEl.classList.add("alt");
+
+          let content = "";
+          const enemyHere = enemies.find((e) => e.alive && e.x === x && e.y === y);
+          const itemHere = items.find((it) => it.x === x && it.y === y);
+          const exitHere = exitDoor.active && exitDoor.x === x && exitDoor.y === y;
+
+          if (player.x === x && player.y === y) {
+            tileEl.classList.add("player");
+            content = "🙂";
+          } else if (enemyHere) {
+            tileEl.classList.add("enemy");
+            content = "👾";
+          } else if (exitHere) {
+            tileEl.classList.add("exit");
+            content = "🚪";
+          } else if (itemHere) {
+            tileEl.classList.add("item");
+            content = "❤️";
+          }
+
+          tileEl.textContent = content;
+          mapEl.appendChild(tileEl);
+        }
+      }
+    }
+
+    // ========== MOVEMENT ==========
+    function tryMove(dx, dy) {
+      if (isQuestionActive || gameOver) return;
+
+      const newX = clamp(player.x + dx, 0, GRID_WIDTH - 1);
+      const newY = clamp(player.y + dy, 0, GRID_HEIGHT - 1);
+
+      player.x = newX;
+      player.y = newY;
+
+      // 몬스터 충돌 체크
+      const enemy = enemies.find((e) => e.alive && samePos(e, player));
+      if (enemy) {
+        triggerQuestion(enemy);
+        renderMap();
+        updateUI();
+        return;
+      }
+
+      // 회복 아이템 체크
+      const itemIndex = items.findIndex((it) => samePos(it, player));
+      if (itemIndex !== -1) {
+        const item = items[itemIndex];
+        items.splice(itemIndex, 1);
+        const beforeHp = player.hp;
+        player.hp = clamp(player.hp + item.heal, 0, player.maxHp);
+        const healed = player.hp - beforeHp;
+        if (healed > 0) {
+          setFeedback(
+            `❤️ 회복 아이템을 먹었습니다! 체력 <span class="highlight">${healed} HP</span> 회복.`,
+            "good"
+          );
+        } else {
+          setFeedback(`이미 체력이 가득 차 있어서 더 이상 회복되지 않아요 😆`, "");
+        }
+      }
+
+      // 출구 문 체크
+      if (exitDoor.active && samePos(player, exitDoor)) {
+        handleLevelCompleted();
+        return;
+      }
+
+      renderMap();
+      updateUI();
+    }
+
+    // ========== QUESTION SYSTEM ==========
+    function triggerQuestion(enemy) {
+      isQuestionActive = true;
+      currentEnemy = enemy;
+      document.getElementById("game-root").classList.add("question-active");
+
+      const meaningEl = document.getElementById("question-meaning");
+      const exampleEl = document.getElementById("question-example");
+      const answerList = document.getElementById("answer-list");
+      answerList.innerHTML = "";
+
+      meaningEl.textContent = enemy.vocab.meaning;
+      exampleEl.textContent = "예문: " + enemy.vocab.example;
+
+      // 선택지: 정답 1개 + 오답 3개
+      const otherVocab = shuffleArray(
+        vocabulary.filter((v) => v.word !== enemy.vocab.word)
+      ).slice(0, 3);
+
+      const options = shuffleArray([enemy.vocab, ...otherVocab]);
+
+      options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.className = "answer-btn";
+        btn.innerHTML = `<span class="word">${opt.word}</span>
+          <span style="opacity:0.7;">${String.fromCharCode(65 + index)}</span>`;
+        btn.addEventListener("click", () => handleAnswerClick(btn, opt.word));
+        answerList.appendChild(btn);
+      });
+
+      setFeedback("뜻에 맞는 영어 단어를 골라 보세요!", "");
+    }
+
+    function handleAnswerClick(buttonEl, chosenWord) {
+      if (!isQuestionActive || !currentEnemy || gameOver) return;
+
+      const answerButtons = document.querySelectorAll(".answer-btn");
+      answerButtons.forEach((btn) => (btn.disabled = true));
+
+      const correctWord = currentEnemy.vocab.word;
+      const isCorrect = chosenWord === correctWord;
+
+      if (isCorrect) {
+        buttonEl.classList.add("correct");
+        player.score += 10 + 5 * level;
+        currentEnemy.alive = false;
+        setFeedback(
+          `정답! <span class="highlight">${correctWord}</span> 단어로 몬스터를 물리쳤습니다.`,
+          "good"
+        );
+      } else {
+        buttonEl.classList.add("wrong");
+        const correctBtn = Array.from(answerButtons).find((btn) =>
+          btn.textContent.includes(correctWord)
+        );
+        if (correctBtn) correctBtn.classList.add("correct");
+
+        player.hp = clamp(player.hp - 1, 0, player.maxHp);
+        setFeedback(
+          `아쉽네요 😢 정답은 <span class="highlight">${correctWord}</span> 입니다. 체력 1 감소.`,
+          "bad"
+        );
+        if (player.hp <= 0) {
+          handleGameOver();
+        }
+      }
+
+      updateUI();
+
+      // 잠깐 기다렸다가 질문 창 닫기
+      setTimeout(() => {
+        if (!gameOver) {
+          isQuestionActive = false;
+          currentEnemy = null;
+          document.getElementById("game-root").classList.remove("question-active");
+          document.getElementById("answer-list").innerHTML = "";
+
+          const remaining = enemies.filter((e) => e.alive).length;
+          if (remaining === 0) {
+            if (!exitDoor.active) {
+              spawnExitDoor();
+            }
+          } else {
+            setFeedback("다른 몬스터를 찾아 계속 이동해 보세요!", "");
+          }
+        }
+        renderMap();
+        updateUI();
+      }, 900);
+    }
+
+    function handleLevelCompleted() {
+      level += 1;
+      exitDoor = { active: false, x: null, y: null };
+      enemies = [];
+      items = [];
+
+      setFeedback(
+        `🎉 출구를 통과했습니다! 레벨 <span class="highlight">${level}</span>(으)로 진급했습니다. 더 많은 몬스터와 단어가 기다리고 있어요.`,
+        "good"
+      );
+
+      spawnEnemiesForLevel();
+      spawnItemsForLevel();
+      renderMap();
+      updateUI();
+    }
+
+    function handleGameOver() {
+      gameOver = true;
+      isQuestionActive = false;
+      document.getElementById("game-root").classList.remove("question-active");
+      document.getElementById("answer-list").innerHTML = "";
+      document.getElementById("question-meaning").textContent =
+        "모험 도중에 쓰러지고 말았습니다…";
+      document.getElementById("question-example").textContent = "";
+      setFeedback(
+        `Game Over 💀 최종 점수: <span class="highlight">${player.score}</span>. "다시 시작"을 눌러 새로운 모험을 시작해 보세요.`,
+        "bad"
+      );
+      toggleRestart(true);
+      renderMap();
+      updateUI();
+    }
+
+    // ========== UI ==========
+    function updateUI() {
+      document.getElementById("player-name").textContent = "어휘 모험가";
+      document.getElementById("score-text").textContent = player.score;
+      document.getElementById("hp-text").textContent = `${player.hp} / ${player.maxHp}`;
+
+      const hpFill = document.getElementById("hp-fill");
+      const hpPercent = (player.hp / player.maxHp) * 100;
+      hpFill.style.width = `${hpPercent}%`;
+      if (hpPercent <= 34) {
+        hpFill.classList.add("low");
+      } else {
+        hpFill.classList.remove("low");
+      }
+
+      const enemiesLeft = enemies.filter((e) => e.alive).length;
+      document.getElementById("enemies-left-text").textContent = enemiesLeft;
+      document.getElementById("level-label").textContent = `레벨 ${level}`;
+    }
+
+    function setFeedback(message, type) {
+      const el = document.getElementById("feedback");
+      el.className = "feedback";
+      if (type === "good") el.classList.add("good");
+      if (type === "bad") el.classList.add("bad");
+      el.innerHTML = message;
     }
 
     function toggleRestart(show) {
@@ -878,227 +1013,25 @@
       btn.style.display = show ? "inline-flex" : "none";
     }
 
-    function drawNewHandAndQuestion() {
-      if (gameOver) return;
+    // ========== INPUT ==========
+    function handleKeyDown(e) {
+      const key = e.key.toLowerCase();
+      let dx = 0;
+      let dy = 0;
+      if (key === "arrowup" || key === "w") dy = -1;
+      else if (key === "arrowdown" || key === "s") dy = 1;
+      else if (key === "arrowleft" || key === "a") dx = -1;
+      else if (key === "arrowright" || key === "d") dx = 1;
+      else return;
 
-      // Ưu tiên những lá ít được xem hoặc sai nhiều (như SRS mini)
-      const sorted = deck.slice().sort((a, b) => {
-        const scoreA = a.seen + a.wrong * 2;
-        const scoreB = b.seen + b.wrong * 2;
-        return scoreA - scoreB;
-      });
-      const base = sorted.slice(0, Math.min(6, sorted.length));
-      hand = shuffleArray(base).slice(0, HAND_SIZE);
-
-      // Chọn 1 lá trong hand làm đáp án
-      currentQuestionCard = hand[Math.floor(Math.random() * hand.length)];
-      currentQuestionCard.seen += 1;
-
-      updateQuestionUI();
-      renderHand();
+      e.preventDefault();
+      tryMove(dx, dy);
     }
 
-    function handleCardClick(cardId) {
-      if (gameOver) return;
-      const selected = hand.find((c) => c.id === cardId);
-      if (!selected || !currentQuestionCard) return;
-
-      const isCorrect = selected.id === currentQuestionCard.id;
-
-      if (isCorrect) {
-        // Đúng
-        player.streak += 1;
-        player.score += 10 + 3 * enemy.level + 2 * currentQuestionCard.level;
-        selected.correctStreak += 1;
-
-        // Level + XP
-        selected.xp += 1;
-        if (selected.xp >= 3 && selected.level < 5) {
-          selected.xp = 0;
-          selected.level += 1;
-          if (selected.mastery < 3) {
-            selected.mastery += 1;
-          }
-        }
-
-        const damage = calcDamage(selected);
-        enemy.hp = clamp(enemy.hp - damage, 0, enemy.maxHp);
-
-        setFeedback(
-          `Chuẩn! <span class="highlight">${player.name}</span> dùng lá bài <span class="highlight">${selected.word}</span> gây <span class="highlight">${damage} sát thương</span>!`,
-          "good"
-        );
-
-        if (enemy.hp <= 0) {
-          // Qua màn, quái mới
-          round += 1;
-          enemy.level += 1;
-          pickEnemyForCurrentRound();
-          setFeedback(
-            `🔥 Bạn đã hạ gục <span class="highlight">quái vật</span>! Màn ${round} bắt đầu – quái mạnh hơn nhưng anh hùng của bạn cũng đã dày dạn kinh nghiệm hơn.`,
-            "good"
-          );
-        }
-      } else {
-        // Sai
-        player.streak = 0;
-        const damageTaken = 3 + enemy.level;
-        player.hp = clamp(player.hp - damageTaken, 0, player.maxHp);
-        selected.wrong += 1;
-        currentQuestionCard.wrong += 1;
-
-        setFeedback(
-          `Sai mất rồi 😢 <span class="highlight">${enemy.name}</span> phản đòn, bạn mất <span class="highlight">${damageTaken} HP</span>.<br/>
-          Đáp án đúng: <span class="highlight">${currentQuestionCard.word}</span> – ${currentQuestionCard.meaning}.`,
-          "bad"
-        );
-
-        if (player.hp <= 0) {
-          handleGameOver();
-          return;
-        }
-      }
-
-      updateAllUI();
-
-      // Khoá hand tạm để tránh spam
-      disableHandTemp();
-      setTimeout(() => {
-        drawNewHandAndQuestion();
-        updateAllUI();
-      }, 500);
-    }
-
-    function handleGameOver() {
-      gameOver = true;
-      setFeedback(
-        `Game over 💀 <span class="highlight">${player.name}</span> gục ngã ở màn <span class="highlight">${round}</span>. 
-        Tổng điểm: <span class="highlight">${player.score}</span>. Nhấn "Chơi lại" để thử build mới & luyện lại bộ bài của bạn.`,
-        "bad"
-      );
-      toggleRestart(true);
-      disableHand(true);
-    }
-
-    // ================== UI ==================
-    function updateAllUI() {
-      updateStatusUI();
-      updateQuestionUI();
-      renderHand();
-    }
-
-    function updateStatusUI() {
-      // Hero
-      document.getElementById("player-name").textContent = player.name;
-      document.getElementById("player-sprite").textContent = player.sprite;
-      document.getElementById("player-tagline").textContent = player.tagline;
-
-      document.getElementById("player-hp-text").textContent = `${player.hp} / ${player.maxHp}`;
-      const playerHpBar = document.getElementById("player-hp-bar");
-      const playerHpPercent = (player.hp / player.maxHp) * 100;
-      playerHpBar.style.width = `${playerHpPercent}%`;
-
-      document.getElementById("score-text").textContent = player.score;
-      document.getElementById("streak-text").textContent = player.streak;
-
-      // Enemy
-      document.getElementById("enemy-name").textContent = enemy.name;
-      document.getElementById("enemy-sprite").textContent = enemy.sprite;
-      document.getElementById("enemy-tagline").textContent = enemy.tagline;
-      document.getElementById("enemy-level").textContent = enemy.level;
-      document.getElementById("round-label").textContent = `Màn ${round}`;
-
-      document.getElementById("enemy-hp-text").textContent = `${enemy.hp} / ${enemy.maxHp}`;
-      const enemyHpBar = document.getElementById("enemy-hp-bar");
-      const enemyHpPercent = (enemy.hp / enemy.maxHp) * 100;
-      enemyHpBar.style.width = `${enemyHpPercent}%`;
-    }
-
-    function updateQuestionUI() {
-      const meaningEl = document.getElementById("question-meaning");
-      const exampleEl = document.getElementById("question-example");
-
-      if (!currentQuestionCard) {
-        meaningEl.textContent = 'Nhấn "Chơi lại" để bắt đầu ván mới.';
-        exampleEl.textContent = "";
-        return;
-      }
-
-      meaningEl.textContent = currentQuestionCard.meaning;
-      exampleEl.textContent = "Ví dụ: " + currentQuestionCard.example;
-    }
-
-    function renderHand() {
-      const handContainer = document.getElementById("hand");
-      handContainer.innerHTML = "";
-
-      hand.forEach((card) => {
-        const cardEl = document.createElement("article");
-        cardEl.className = "card";
-        cardEl.dataset.cardId = card.id;
-
-        const rarityClass = getRarityClass(card.rarity);
-        const rarityLabel = getRarityLabel(card.rarity);
-
-        const stars = "★".repeat(card.mastery) + "☆".repeat(3 - card.mastery);
-        const xpPercent = (card.xp / 3) * 100;
-
-        cardEl.innerHTML = `
-          <div class="card-header">
-            <div class="card-word">${card.word}</div>
-            <div class="card-rarity ${rarityClass}">${rarityLabel}</div>
-          </div>
-          <div class="card-body">
-            Level: <strong>${card.level}</strong><br/>
-            Đã gặp: ${card.seen} lần
-            <div class="topic-pill">
-              📚 <span>${card.topic}</span>
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="stars">${stars.split("").map((s) => `<span>${s}</span>`).join("")}</div>
-            <div class="xp-bar">
-              <div class="xp-fill" style="width:${xpPercent}%;"></div>
-            </div>
-          </div>
-        `;
-
-        cardEl.addEventListener("click", () => handleCardClick(card.id));
-        handContainer.appendChild(cardEl);
-      });
-    }
-
-    function setFeedback(message, type) {
-      const feedbackEl = document.getElementById("feedback");
-      feedbackEl.className = "feedback";
-      if (type === "good") feedbackEl.classList.add("good");
-      if (type === "bad") feedbackEl.classList.add("bad");
-      feedbackEl.innerHTML = message;
-    }
-
-    function disableHandTemp() {
-      disableHand(true);
-      setTimeout(() => disableHand(false), 450);
-    }
-
-    function disableHand(disabled) {
-      const handContainer = document.getElementById("hand");
-      const cards = handContainer.querySelectorAll(".card");
-      cards.forEach((cardEl) => {
-        if (disabled) {
-          cardEl.classList.add("disabled");
-        } else {
-          cardEl.classList.remove("disabled");
-        }
-      });
-    }
-
-    // ================== INIT ==================
+    // ========== INIT ==========
     document.addEventListener("DOMContentLoaded", () => {
-      const restartBtn = document.getElementById("restart-btn");
-      restartBtn.addEventListener("click", startGame);
-
-      // Khởi động game lần đầu
+      document.addEventListener("keydown", handleKeyDown);
+      document.getElementById("restart-btn").addEventListener("click", startGame);
       startGame();
     });
   </script>
